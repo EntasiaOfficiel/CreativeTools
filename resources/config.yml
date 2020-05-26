@@ -1,0 +1,6 @@
+dev: true
+buildworld: build
+spawn:
+  x: 0
+  y: 65
+  z: 0
