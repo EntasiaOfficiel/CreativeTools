@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="CreativeTools">
-    <output-path>$USER_HOME$/Bureau</output-path>
-    <root id="archive" name="CreativeTools.jar">
-      <element id="module-output" name="CreativeTools" />
-      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
-    </root>
-  </artifact>
-</component>
