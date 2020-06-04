@@ -74,7 +74,12 @@ public class SBManager {
 				double av = plot.getAverageRating();
 				plots[2] = "§7Note : §b ";
 				if(Double.isNaN(av))plots[2]+="Non noté";
-				else plots[2]+=Math.round(av*100)/100d+"§7/§b10";
+				else{
+					double a = Math.round(av*100)/100d;
+					String b = Double.toString(a);
+					if(a%1==0)b = b.substring(b.length(), 2);
+					plots[2]+=b+"§7/§b10";
+				}
 				objective.getScore(plots[2]).setScore(45);
 
 				plots[3] = "§7Role : §b ";
