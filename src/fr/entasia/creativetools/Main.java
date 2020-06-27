@@ -10,7 +10,6 @@ import fr.entasia.creativetools.listeners.Protection;
 import fr.entasia.creativetools.utils.CreaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,7 +46,7 @@ public class Main extends JavaPlugin {
 			getCommand("money").setExecutor(new CoinsCmd());
 			getCommand("eco").setExecutor(new EcoCmd());
 			getCommand("spawn").setExecutor(new SpawnCmd());
-			getCommand("plotmenu").setExecutor(new PlotCmd());
+			getCommand("menu").setExecutor(new MenuCmd());
 
 			getServer().getPluginManager().registerEvents(new Basic(), this);
 			getServer().getPluginManager().registerEvents(new Protection(), this);

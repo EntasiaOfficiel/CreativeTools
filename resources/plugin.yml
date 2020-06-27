@@ -15,4 +15,5 @@ commands:
   spawn:
     aliases: [sp, spa]
 
-  plotmenu:
+  menu:
+    aliases: plotmenu

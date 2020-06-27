@@ -15,7 +15,7 @@ public class EcoCmd implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player))return false;
 		Player p = (Player) sender;
-		if (p.hasPermission("entasia.eco")) {
+		if (p.hasPermission("creatif.eco")) {
 			if (args.length == 3) {
 				Player target = Bukkit.getPlayer(args[1]);
 				if(target==null)p.sendMessage("§cLe joueur "+args[1]+" n'est pas connecté ou n'existe pas !");

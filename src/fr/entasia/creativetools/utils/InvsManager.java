@@ -11,6 +11,8 @@ import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import fr.entasia.apis.menus.MenuClickEvent;
 import fr.entasia.apis.menus.MenuCreator;
+import fr.entasia.apis.other.ItemBuilder;
+import fr.entasia.apis.utils.ItemUtils;
 import fr.entasia.creativetools.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,7 +23,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,15 +137,6 @@ public class InvsManager {
 		}
 	};
 
-	public static void placeSkullAsync(Inventory inv, int slot, ItemStack item){
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				inv.setItem(slot, item);
-			}
-		}.runTaskAsynchronously(Main.main);
-	}
-
 	public static void plotGestionOpen(Player p, Plot plot){
 
 		Inventory inv = plotGestionMenu.createInv(3, "§aGestion du Plot :", plot);
@@ -233,12 +225,7 @@ public class InvsManager {
 
 			meta.setLore(array);
 			item.setItemMeta(meta);
-			inv.setItem(i, item);
-			if(played){
-				meta.setOwningPlayer(lp);
-				item.setItemMeta(meta);
-				placeSkullAsync(inv, i, item.clone());
-			}
+			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
 			i++;
 		}
 
@@ -257,12 +244,7 @@ public class InvsManager {
 
 			meta.setLore(array);
 			item.setItemMeta(meta);
-			inv.setItem(i, item);
-			if(played){
-				meta.setOwningPlayer(lp);
-				item.setItemMeta(meta);
-				placeSkullAsync(inv, i, item.clone());
-			}
+			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
 			i++;
 		}
 
@@ -281,12 +263,7 @@ public class InvsManager {
 
 			meta.setLore(array);
 			item.setItemMeta(meta);
-			inv.setItem(i, item);
-			if(played){
-				meta.setOwningPlayer(lp);
-				item.setItemMeta(meta);
-				placeSkullAsync(inv, i, item.clone());
-			}
+			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
 			i++;
 		}
 		item = new ItemStack(Material.BOOK_AND_QUILL, 1);
@@ -322,6 +299,9 @@ public class InvsManager {
 							case LOG_2:
 								type = "SAVANNA";
 								break;
+							case BROWN_MUSHROOM:
+								type = "SWAMPLAND";
+								break;
 							case VINE:
 								type = "JUNGLE";
 								break;
@@ -346,41 +326,15 @@ public class InvsManager {
 
 		Inventory inv = plotBiomeMenu.createInv(3, "§7Choisir un biome", plot);
 
-		ItemStack item = new ItemStack(Material.GRASS);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§aPlaine");
-		item.setItemMeta(meta);
-		inv.setItem(10, item);
+		inv.setItem(10, new ItemBuilder(Material.GRASS).name("§aPlaine").build());
+		inv.setItem(11, new ItemBuilder(Material.DIRT).damage(2).name("§6Taiga").build());
+		inv.setItem(12, new ItemBuilder(Material.LOG_2).name("§cSavanne").build());
+		inv.setItem(13, new ItemBuilder(Material.BROWN_MUSHROOM).name("§2Marais").build());
+		inv.setItem(14, new ItemBuilder(Material.VINE).name("§aJungle").build());
+		inv.setItem(15, new ItemBuilder(Material.ICE).name("§2Neige").build());
 
-		item = new ItemStack(Material.DIRT, 1, (short)2);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§6Taiga");
-		item.setItemMeta(meta);
-		inv.setItem(11, item);
+		inv.setItem(26, new ItemBuilder(Material.BOOK_AND_QUILL).name("§cRetour au menu précédent").build());
 
-		item = new ItemStack(Material.LOG_2);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§aPlaine");
-		item.setItemMeta(meta);
-		inv.setItem(12, item);
-
-		item = new ItemStack(Material.VINE);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§aPlaine");
-		item.setItemMeta(meta);
-		inv.setItem(13, item);
-
-		item = new ItemStack(Material.ICE);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§aPlaine");
-		item.setItemMeta(meta);
-		inv.setItem(14, item);
-
-		item = new ItemStack(Material.BOOK_AND_QUILL, 1);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§cRetour au menu précédent");
-		item.setItemMeta(meta);
-		inv.setItem(26, item);
 		p.openInventory(inv);
 	}
 
@@ -422,10 +376,6 @@ public class InvsManager {
 
 		@Override
 		public boolean onFreeSlotClick(MenuClickEvent e) {
-//			System.out.println("bb");
-//			System.out.println(e.item.getType());
-//			System.out.println(e.item.getType().isSolid());
-//			System.out.println(e.item.getType().isBlock());
 			return !e.item.getType().isBlock();
 		}
 	};
