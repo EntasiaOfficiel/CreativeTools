@@ -6,6 +6,7 @@ import com.intellectualcrafters.plot.object.Plot;
 import com.intellectualcrafters.plot.object.PlotId;
 import com.intellectualcrafters.plot.object.RegionWrapper;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -362,8 +363,12 @@ public class InvsManager {
 								selected.getDurability());
 						for(RegionWrapper rw : plot.getRegions()){
 							System.out.println(rw.minX+":"+rw.minZ+" --> "+rw.maxX+":"+rw.maxZ);
-							editSession.setBlocks(new CuboidRegion(new Vector(rw.minX, 65, rw.minZ), new Vector(rw.maxX, 65, rw.maxZ)),
-									bb);
+							try {
+								editSession.setBlocks(new CuboidRegion(new Vector(rw.minX, 65, rw.minZ), new Vector(rw.maxX, 65, rw.maxZ)),
+										bb);
+							} catch (MaxChangedBlocksException ex) {
+								ex.printStackTrace();
+							}
 						}
 						e.player.closeInventory();
 						e.player.teleport(Main.spawn);
