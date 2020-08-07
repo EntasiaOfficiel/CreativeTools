@@ -3,8 +3,10 @@ version: 1.0.0
 depend: [Libraries]
 author: Stargeyt iTrooz_
 main: fr.entasia.creativetools.Main
+api-version: '1.14'
 commands:
   creatools:
+    aliases: [creativetools]
 
   money:
     aliases: [coins]

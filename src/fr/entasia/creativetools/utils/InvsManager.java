@@ -1,14 +1,18 @@
 package fr.entasia.creativetools.utils;
 
-import com.boydti.fawe.FaweCache;
+import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.util.EditSessionBuilder;
-import com.intellectualcrafters.plot.object.Plot;
-import com.intellectualcrafters.plot.object.PlotId;
-import com.intellectualcrafters.plot.object.RegionWrapper;
+import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.plot.PlotId;
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.math.BlockVector3Imp;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.world.biome.BiomeType;
+import com.sk89q.worldedit.world.biome.BiomeTypes;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import fr.entasia.apis.menus.MenuClickEvent;
 import fr.entasia.apis.menus.MenuCreator;
 import fr.entasia.apis.other.ItemBuilder;
@@ -116,19 +120,19 @@ public class InvsManager {
 				else{
 					switch(e.item.getType()){
 						case ENDER_PEARL:
-							com.intellectualcrafters.plot.object.Location truc = plot.getHome();
-							e.player.teleport(new Location(Main.world, truc.getX(), truc.getY(), truc.getZ(), truc.getYaw(), truc.getPitch()));
+							plot.getHome(faweLoc ->
+									e.player.teleport(new Location(Main.world, faweLoc.getX(), faweLoc.getY(), faweLoc.getZ(), faweLoc.getYaw(), faweLoc.getPitch())));
 							break;
-						case BANNER:
+						case LIGHT_BLUE_BANNER:
 							plotTeamOpen(e.player, plot);
 							break;
-						case SAPLING:
+						case OAK_SAPLING:
 							choseBiomeOpen(e.player, plot);
 							break;
 						case SAND:
 							changeFloorOpen(e.player, plot);
 							break;
-						case BOOK_AND_QUILL:
+						case WRITABLE_BOOK:
 							plotListOpen(e.player);
 							break;
 					}
@@ -148,13 +152,13 @@ public class InvsManager {
 		inv.setItem(10, item);
 
 
-		item = new ItemStack(Material.BANNER, 1, (short)3);
+		item = new ItemStack(Material.LIGHT_BLUE_BANNER, 1, (short)3);
 		meta = item.getItemMeta();
 		meta.setDisplayName("§7Voir les membres de la team");
 		item.setItemMeta(meta);
 		inv.setItem(11, item);
 
-		item = new ItemStack(Material.SAPLING);
+		item = new ItemStack(Material.OAK_SAPLING);
 		meta = item.getItemMeta();
 		meta.setDisplayName("§7Changer de biome");
 		item.setItemMeta(meta);
@@ -172,7 +176,7 @@ public class InvsManager {
 		item.setItemMeta(meta);
 		inv.setItem(13, item);
 
-		item = new ItemStack(Material.BOOK_AND_QUILL, 1);
+		item = new ItemStack(Material.WRITABLE_BOOK, 1);
 		meta = item.getItemMeta();
 		meta.setDisplayName("§cRetour au menu précédent");
 		item.setItemMeta(meta);
@@ -193,7 +197,7 @@ public class InvsManager {
 				Plot plot = (Plot) e.data;
 				if (plot == null || !plot.isAdded(e.player.getUniqueId()))
 					e.player.sendMessage("§cUne erreur s'est produite !");
-				else if (e.item.getType() == Material.BOOK_AND_QUILL) plotGestionOpen(e.player, plot);
+				else if (e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
 			}
 		}
 	};
@@ -204,7 +208,7 @@ public class InvsManager {
 		Set<UUID> members = plot.getTrusted();
 		Set<UUID> coops = plot.getMembers();
 		Inventory inv = plotTeamMenu.createInv( (owners.size()+members.size()+coops.size())/9+1, "§7Membres de la team", plot);
-		ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
+		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta)item.getItemMeta();
 		OfflinePlayer lp;
 		int i = 0;
@@ -266,7 +270,7 @@ public class InvsManager {
 			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
 			i++;
 		}
-		item = new ItemStack(Material.BOOK_AND_QUILL, 1);
+		item = new ItemStack(Material.WRITABLE_BOOK, 1);
 		ItemMeta rmeta = item.getItemMeta();
 		rmeta.setDisplayName("§cRetour au menu précédent");
 		item.setItemMeta(rmeta);
@@ -286,27 +290,27 @@ public class InvsManager {
 				Plot plot = (Plot)e.data;
 				if(plot==null||!plot.isAdded(e.player.getUniqueId()))e.player.sendMessage("§cUne erreur s'est produite !");
 				else {
-					if(e.item.getType() == Material.BOOK_AND_QUILL) plotGestionOpen(e.player, plot);
+					if(e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
 					else {
-						String type;
+						BiomeType type;
 						switch (e.item.getType()) {
 							case GRASS:
-								type = "PLAINS";
+								type = BiomeTypes.PLAINS;
 								break;
 							case DIRT:
-								type = "TAIGA";
+								type = BiomeTypes.TAIGA;
 								break;
-							case LOG_2:
-								type = "SAVANNA";
+							case ACACIA_LOG:
+								type = BiomeTypes.SAVANNA;
 								break;
 							case BROWN_MUSHROOM:
-								type = "SWAMPLAND";
+								type = BiomeTypes.SWAMP;
 								break;
 							case VINE:
-								type = "JUNGLE";
+								type = BiomeTypes.JUNGLE;
 								break;
 							case ICE:
-								type = "ICE_FLATS";
+								type = BiomeTypes.ICE_SPIKES;
 								break;
 							default:
 								e.player.sendMessage("§cCe biome n'a pas été implémenté dans le Créatif ! Contacte un membre du Staff");
@@ -328,12 +332,12 @@ public class InvsManager {
 
 		inv.setItem(10, new ItemBuilder(Material.GRASS).name("§aPlaine").build());
 		inv.setItem(11, new ItemBuilder(Material.DIRT).damage(2).name("§6Taiga").build());
-		inv.setItem(12, new ItemBuilder(Material.LOG_2).name("§cSavanne").build());
+		inv.setItem(12, new ItemBuilder(Material.ACACIA_LOG).name("§cSavanne").build());
 		inv.setItem(13, new ItemBuilder(Material.BROWN_MUSHROOM).name("§2Marais").build());
 		inv.setItem(14, new ItemBuilder(Material.VINE).name("§aJungle").build());
 		inv.setItem(15, new ItemBuilder(Material.ICE).name("§2Neige").build());
 
-		inv.setItem(26, new ItemBuilder(Material.BOOK_AND_QUILL).name("§cRetour au menu précédent").build());
+		inv.setItem(26, new ItemBuilder(Material.WRITABLE_BOOK).name("§cRetour au menu précédent").build());
 
 		p.openInventory(inv);
 	}
@@ -351,18 +355,24 @@ public class InvsManager {
 			System.out.println(plot==null);
 			if(plot==null||!plot.isAdded(e.player.getUniqueId()))e.player.sendMessage("§cUne erreur s'est produite !");
 			else {
-				if(e.item.getType() == Material.BOOK_AND_QUILL) plotGestionOpen(e.player, plot);
-				if(e.item.getType() == Material.WOOL) {
+				if(e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
+				if(e.item.getType() == Material.LIME_WOOL) {
 					ItemStack selected = e.inv.getItem(11);
 					if(selected==null)e.player.sendMessage("§cMet un block dans le slot vide du menu !");
 					else{
-						EditSession editSession = new EditSessionBuilder(Main.world.getName()).fastmode(true).allowedRegionsEverywhere().build();
-						BaseBlock bb = FaweCache.getBlock(
-								selected.getTypeId(),
-								selected.getDurability());
-						for(RegionWrapper rw : plot.getRegions()){
-							System.out.println(rw.minX+":"+rw.minZ+" --> "+rw.maxX+":"+rw.maxZ);
-							editSession.setBlocks(new CuboidRegion(new Vector(rw.minX, 65, rw.minZ), new Vector(rw.maxX, 65, rw.maxZ)),
+						EditSession editSession = new EditSessionBuilder(FaweAPI.getWorld(Main.world.getName())).fastmode(true).allowedRegionsEverywhere().build();
+						BlockType bt = BlockTypes.get(selected.getType().toString());
+						if(bt==null){
+							e.player.sendMessage("§cUne erreur s'est produite lors de l'identification du block ! Contacte un membre du Staff");
+							return;
+						}
+						BaseBlock bb = new BaseBlock(bt.getDefaultState());
+						for(CuboidRegion rg : plot.getRegions()){
+							System.out.println(rg.getMinimumX()+":"+rg.getMinimumZ()+" --> "+rg.getMaximumX()+":"+rg.getMaximumZ());
+							editSession.setBlocks(
+									(Region) new CuboidRegion(BlockVector3Imp.at(rg.getMinimumX(),
+											65, rg.getMinimumZ()),
+											BlockVector3Imp.at(rg.getMaximumX(), 65, rg.getMaximumZ())),
 									bb);
 						}
 						e.player.closeInventory();
@@ -384,10 +394,10 @@ public class InvsManager {
 
 		Inventory inv = plotFloorMenu.createInv(5, "§7Changer le sol du plot  §c(Béta)", plot);
 
-		ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 3);
+		ItemStack item = new ItemStack(Material.GLASS_PANE);
 		for(int i : new int[]{1,2,3,10,12,19,20,21}) inv.setItem(i, item);
 
-		item = new ItemStack(Material.WOOL, 1, (short)5);
+		item = new ItemStack(Material.LIME_WOOL);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName("§aValider");
 		item.setItemMeta(meta);
@@ -401,7 +411,7 @@ public class InvsManager {
 		inv.setItem(16, item);
 
 
-		item = new ItemStack(Material.BOOK_AND_QUILL, 1);
+		item = new ItemStack(Material.WRITABLE_BOOK);
 		meta = item.getItemMeta();
 		meta.setDisplayName("§cRetour au menu précédent");
 		item.setItemMeta(meta);

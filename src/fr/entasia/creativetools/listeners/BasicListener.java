@@ -1,7 +1,7 @@
 package fr.entasia.creativetools.listeners;
 
-import com.plotsquared.bukkit.events.PlayerEnterPlotEvent;
-import com.plotsquared.bukkit.events.PlayerLeavePlotEvent;
+import com.plotsquared.core.events.PlayerEnterPlotEvent;
+import com.plotsquared.core.events.PlayerLeavePlotEvent;
 import fr.entasia.creativetools.Main;
 import fr.entasia.creativetools.utils.CreaPlayer;
 import fr.entasia.creativetools.utils.SBManager;
@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
-public class Basic implements Listener {
+public class BasicListener implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
@@ -33,24 +33,6 @@ public class Basic implements Listener {
 	@EventHandler
 	public void onWeather(WeatherChangeEvent e) {
 		e.setCancelled(e.toWeatherState()); // en gros si c'est true c'est la pluie // ca marche fait pas chier // bonjour
-	}
-
-	@EventHandler
-	public void onPlotEnter(PlayerEnterPlotEvent e) {
-		System.out.println("plot enter event for "+e.getPlayer().getName());
-		CreaPlayer cp = Main.playerCache.get(e.getPlayer().getUniqueId());
-		if(cp!=null){
-			cp.sb.setPlot(e.getPlot());
-		}
-	}
-
-	@EventHandler
-	public void onPlotQuit(PlayerLeavePlotEvent e) {
-		System.out.println("plot leave event for "+e.getPlayer().getName());
-		CreaPlayer cp = Main.playerCache.get(e.getPlayer().getUniqueId());
-		if(cp!=null){
-			cp.sb.setPlot(null);
-		}
 	}
 
 	@EventHandler

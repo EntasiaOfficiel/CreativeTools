@@ -1,6 +1,6 @@
 package fr.entasia.creativetools.utils;
 
-import com.intellectualcrafters.plot.object.Plot;
+import com.plotsquared.core.plot.Plot;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;

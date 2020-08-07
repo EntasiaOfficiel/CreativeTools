@@ -1,12 +1,13 @@
 package fr.entasia.creativetools;
 
-import com.intellectualcrafters.plot.api.PlotAPI;
-import com.intellectualcrafters.plot.object.Plot;
-import com.intellectualcrafters.plot.object.PlotId;
+import com.plotsquared.core.api.PlotAPI;
+import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.plot.PlotId;
 import fr.entasia.apis.sql.SQLConnection;
 import fr.entasia.creativetools.command.*;
-import fr.entasia.creativetools.listeners.Basic;
-import fr.entasia.creativetools.listeners.Protection;
+import fr.entasia.creativetools.listeners.BasicListener;
+import fr.entasia.creativetools.listeners.PlotListener;
+import fr.entasia.creativetools.listeners.ProtectListener;
 import fr.entasia.creativetools.utils.CreaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -34,6 +35,7 @@ public class Main extends JavaPlugin {
 		try {
 			main = this;
 			plotApi = new PlotAPI();
+			plotApi.registerListener(new PlotListener());
 
 			getLogger().info("Plugin CreativeTools activé");
 			saveDefaultConfig();
@@ -48,8 +50,8 @@ public class Main extends JavaPlugin {
 			getCommand("spawn").setExecutor(new SpawnCmd());
 			getCommand("menu").setExecutor(new MenuCmd());
 
-			getServer().getPluginManager().registerEvents(new Basic(), this);
-			getServer().getPluginManager().registerEvents(new Protection(), this);
+			getServer().getPluginManager().registerEvents(new BasicListener(), this);
+			getServer().getPluginManager().registerEvents(new ProtectListener(), this);
 		} catch (Exception e) {
 			e.printStackTrace();
 			getLogger().severe("Erreur lors du chargement du plugin ! ARRET DU SERVEUR");
@@ -76,7 +78,7 @@ public class Main extends JavaPlugin {
 
 	public static Plot getPlot(PlotId plid){
 		for(Plot p : plotApi.getAllPlots()){
-			if(p.getId().x==plid.x&&p.getId().y==plid.y)return p;
+			if(p.getId().getX()==plid.getX()&&p.getId().getY()==plid.getY())return p;
 		}
 		return null;
 	}
