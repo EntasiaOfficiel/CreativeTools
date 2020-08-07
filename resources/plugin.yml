@@ -19,3 +19,6 @@ commands:
 
   menu:
     aliases: plotmenu
+
+  cosmetiques:
+    aliases: [cosm,cosmetique,pet,pets,particules]

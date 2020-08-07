@@ -48,6 +48,7 @@ public class Main extends JavaPlugin {
 			getCommand("money").setExecutor(new CoinsCmd());
 			getCommand("eco").setExecutor(new EcoCmd());
 			getCommand("spawn").setExecutor(new SpawnCmd());
+			getCommand("cosmetiques").setExecutor(new CosmCmd());
 			getCommand("menu").setExecutor(new MenuCmd());
 
 			getServer().getPluginManager().registerEvents(new BasicListener(), this);
