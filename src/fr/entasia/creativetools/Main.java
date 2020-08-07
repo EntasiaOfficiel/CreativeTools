@@ -87,6 +87,14 @@ public class Main extends JavaPlugin {
 	public static void tpSpawn(Player p){
 		p.teleport(spawn);
 		p.getInventory().clear();
+	}
 
+	public static CreaPlayer getCreaPlayer(Player p){
+		CreaPlayer cp = playerCache.get(p.getUniqueId());
+		if(cp==null){
+			cp = new CreaPlayer(p);
+			playerCache.put(p.getUniqueId(), cp);
+		}
+		return cp;
 	}
 }

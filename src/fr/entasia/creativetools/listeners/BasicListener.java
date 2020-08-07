@@ -1,7 +1,5 @@
 package fr.entasia.creativetools.listeners;
 
-import com.plotsquared.core.events.PlayerEnterPlotEvent;
-import com.plotsquared.core.events.PlayerLeavePlotEvent;
 import fr.entasia.creativetools.Main;
 import fr.entasia.creativetools.utils.CreaPlayer;
 import fr.entasia.creativetools.utils.SBManager;
