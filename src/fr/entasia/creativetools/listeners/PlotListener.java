@@ -13,7 +13,6 @@ public class PlotListener {
 	@Subscribe
 	public void onPlotEnter(PlayerEnterPlotEvent e) {
 		Player p = (Player) e.getPlotPlayer().getPlatformPlayer();
-		System.out.println("plot enter event for "+p.getName());
 		CreaPlayer cp = Main.getCreaPlayer(p);
 		cp.sb.setPlot(e.getPlot());
 	}
@@ -21,7 +20,6 @@ public class PlotListener {
 	@Subscribe
 	public void onPlotQuit(PlayerLeavePlotEvent e) {
 		Player p = (Player) e.getPlotPlayer().getPlatformPlayer();
-		System.out.println("plot leave event for "+p.getName());
 		CreaPlayer cp = Main.getCreaPlayer(p);
 		cp.sb.setPlot(null);
 	}

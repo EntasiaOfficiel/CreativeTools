@@ -16,7 +16,6 @@ public class BasicListener implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		System.out.println("join event for "+e.getPlayer().getName());
 		e.getPlayer().teleport(Main.spawn);
 		CreaPlayer cp = new CreaPlayer(e.getPlayer());
 		cp.sb = new SBManager(cp);

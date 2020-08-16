@@ -30,7 +30,6 @@ public class SBManager {
 
 	public void softSet(){
 		if(cp.p.getScoreboard()!=scoreboard)refresh();
-		System.out.println("fin du set");
 	}
 
 	public void refresh(){
@@ -56,7 +55,6 @@ public class SBManager {
 	}
 
 	public void setPlot(Plot plot){
-		System.out.println("setting sb for plot");
 		for(String s : plots)scoreboard.resetScores(s);
 
 		if(plot==null) {

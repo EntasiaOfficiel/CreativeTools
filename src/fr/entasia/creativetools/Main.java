@@ -53,7 +53,7 @@ public class Main extends JavaPlugin {
 
 			getServer().getPluginManager().registerEvents(new BasicListener(), this);
 			getServer().getPluginManager().registerEvents(new ProtectListener(), this);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			getLogger().severe("Erreur lors du chargement du plugin ! ARRET DU SERVEUR");
 			getServer().shutdown();
@@ -65,10 +65,10 @@ public class Main extends JavaPlugin {
 		getLogger().severe("Plugin CreativeTools désactivé");
 	}
 
-	public boolean loadConfig() throws Exception {
+	public boolean loadConfig() throws Throwable {
 		main.reloadConfig();
 		world = Bukkit.getServer().getWorlds().get(0);
-		buildworld = Bukkit.getServer().getWorld(getConfig().getString("buildworld"));
+		buildworld = Bukkit.getServer().getWorld(getConfig().getString("buildworld", "world"));
 		spawn = new Location(world, parseLoc("x") + 0.5, parseLoc("y") + 0.2, parseLoc("z") + 0.5);
 		return true;
 	}

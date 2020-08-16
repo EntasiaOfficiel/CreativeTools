@@ -352,7 +352,6 @@ public class InvsManager {
 		@Override
 		public void onMenuClick(MenuClickEvent e) {
 			Plot plot = (Plot)e.data;
-			System.out.println(plot==null);
 			if(plot==null||!plot.isAdded(e.player.getUniqueId()))e.player.sendMessage("§cUne erreur s'est produite !");
 			else {
 				if(e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
@@ -368,7 +367,6 @@ public class InvsManager {
 						}
 						BaseBlock bb = new BaseBlock(bt.getDefaultState());
 						for(CuboidRegion rg : plot.getRegions()){
-							System.out.println(rg.getMinimumX()+":"+rg.getMinimumZ()+" --> "+rg.getMaximumX()+":"+rg.getMaximumZ());
 							editSession.setBlocks(
 									(Region) new CuboidRegion(BlockVector3Imp.at(rg.getMinimumX(),
 											65, rg.getMinimumZ()),
