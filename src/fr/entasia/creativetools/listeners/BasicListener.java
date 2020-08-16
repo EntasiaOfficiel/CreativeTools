@@ -16,10 +16,9 @@ public class BasicListener implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		e.getPlayer().teleport(Main.spawn);
-		CreaPlayer cp = new CreaPlayer(e.getPlayer());
+		CreaPlayer cp = Main.getCreaPlayer(e.getPlayer());
 		cp.sb = new SBManager(cp);
-		Main.playerCache.put(e.getPlayer().getUniqueId(), cp);
+		e.getPlayer().teleport(Main.spawn);
 	}
 
 	@EventHandler
@@ -40,10 +39,8 @@ public class BasicListener implements Listener {
 			if(p.getWorld()==Main.world){
 				p.setGameMode(GameMode.CREATIVE);
 				cp.sb.softSet();
-				cp.sb.register();
 			}else{
 				cp.sb.clear();
-//				cp.sb.objective.unregister();
 			}
 		}
 	}

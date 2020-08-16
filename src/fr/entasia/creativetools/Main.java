@@ -33,11 +33,11 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		try {
+			getLogger().info("Activation du plugin..");
 			main = this;
 			plotApi = new PlotAPI();
 			plotApi.registerListener(new PlotListener());
 
-			getLogger().info("Plugin CreativeTools activé");
 			saveDefaultConfig();
 			loadConfig();
 
@@ -53,6 +53,8 @@ public class Main extends JavaPlugin {
 
 			getServer().getPluginManager().registerEvents(new BasicListener(), this);
 			getServer().getPluginManager().registerEvents(new ProtectListener(), this);
+
+			getLogger().info("Plugin activé !");
 		} catch (Throwable e) {
 			e.printStackTrace();
 			getLogger().severe("Erreur lors du chargement du plugin ! ARRET DU SERVEUR");
@@ -60,12 +62,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	@Override
-	public void onDisable() {
-		getLogger().severe("Plugin CreativeTools désactivé");
-	}
-
-	public boolean loadConfig() throws Throwable {
+	public boolean loadConfig() {
 		main.reloadConfig();
 		world = Bukkit.getServer().getWorlds().get(0);
 		buildworld = Bukkit.getServer().getWorld(getConfig().getString("buildworld", "world"));
