@@ -30,7 +30,7 @@ public class BasicListener implements Listener {
 
 	@EventHandler
 	public void onWeather(WeatherChangeEvent e) {
-		e.setCancelled(e.toWeatherState()); // en gros si c'est true c'est la pluie // ca marche fait pas chier // bonjour
+		e.setCancelled(e.toWeatherState()); // en gros si c'est true c'est la pluie // ca marche fait pas chier // bonjour // cv ?
 	}
 
 	@EventHandler

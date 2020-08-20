@@ -66,16 +66,16 @@ public class SBManager {
 				objective.getScore(plots[0]).setScore(47);
 				if(plot.hasOwner()){
 					PlotSquared.get().getImpromptuUUIDPipeline().getNames(plot.getOwners()).thenAcceptAsync(map -> {
-						plots[1] = "§7Owner : §b"+map.get(0).getUsername();
+						plots[1] = "§7Owner :§b"+map.get(0).getUsername();
 						objective.getScore(plots[1]).setScore(46);
 					});
 				} else{
-					plots[1] = "§7Owner : §b²Inconnu";
+					plots[1] = "§7Owner : §bInconnu";
 					objective.getScore(plots[1]).setScore(46);
 				}
 
 				double av = plot.getAverageRating();
-				plots[2] = "§7Note : §b ";
+				plots[2] = "§7Note : §b";
 				if(Double.isNaN(av))plots[2]+="Non noté";
 				else{
 					double a = Math.round(av*100)/100d;
@@ -85,7 +85,7 @@ public class SBManager {
 				}
 				objective.getScore(plots[2]).setScore(45);
 
-				plots[3] = "§7Role : §b ";
+				plots[3] = "§7Role : §b";
 				if(plot.isOwner(cp.p.getUniqueId()))plots[3]+="§cOwner";
 				else if(plot.getTrusted().contains(cp.p.getUniqueId()))plots[3]+="§aMembre";
 				else if(plot.getTrusted().contains(cp.p.getUniqueId()))plots[3]+="§eCOOP";

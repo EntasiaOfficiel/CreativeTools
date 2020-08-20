@@ -1,7 +1,6 @@
 package fr.entasia.creativetools.listeners;
 
 import com.google.common.eventbus.Subscribe;
-import com.plotsquared.bukkit.listener.PlayerEventListener;
 import com.plotsquared.core.events.PlayerEnterPlotEvent;
 import com.plotsquared.core.events.PlayerLeavePlotEvent;
 import fr.entasia.creativetools.Main;
