@@ -5,7 +5,10 @@ import com.plotsquared.core.events.PlayerEnterPlotEvent;
 import com.plotsquared.core.events.PlayerLeavePlotEvent;
 import fr.entasia.creativetools.Main;
 import fr.entasia.creativetools.utils.CreaPlayer;
+import net.minecraft.server.v1_14_R1.TileEntitySkull;
+import org.bukkit.craftbukkit.v1_14_R1.block.impl.CraftSkull;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class PlotListener {
 

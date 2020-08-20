@@ -1,11 +1,16 @@
 package fr.entasia.creativetools.utils;
 
+import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.uuid.UUIDMapping;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class SBManager {
 
@@ -64,10 +69,15 @@ public class SBManager {
 			if(plot.hasOwner()){
 				plots[0] = "§7Plot : ";
 				objective.getScore(plots[0]).setScore(47);
-				Player p = Bukkit.getPlayer(plot.getOwners().iterator().next());
-				if(p==null) plots[1] = "§7Owner : §bInconnu";
-				else plots[1] = "§7Owner : §b"+p.getDisplayName();
-				objective.getScore(plots[1]).setScore(46);
+				if(plot.hasOwner()){
+					PlotSquared.get().getImpromptuUUIDPipeline().getNames(plot.getOwners()).thenAcceptAsync(map -> {
+						plots[1] = "§7Owner : §b"+map.get(0).getUsername();
+						objective.getScore(plots[1]).setScore(46);
+					});
+				} else{
+					plots[1] = "§7Owner : §b²Inconnu";
+					objective.getScore(plots[1]).setScore(46);
+				}
 
 				double av = plot.getAverageRating();
 				plots[2] = "§7Note : §b ";
