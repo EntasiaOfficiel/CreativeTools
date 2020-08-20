@@ -2,15 +2,10 @@ package fr.entasia.creativetools.utils;
 
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.plot.Plot;
-import com.plotsquared.core.uuid.UUIDMapping;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 public class SBManager {
 

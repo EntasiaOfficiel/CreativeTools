@@ -17,12 +17,13 @@ public class BasicListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent e) {
-		CreaPlayer cp = Main.getCreaPlayer(e.getPlayer());
+		CreaPlayer cp = new CreaPlayer(e.getPlayer());
 		cp.sb = new SBManager(cp);
+		Main.playerCache.put(e.getPlayer().getUniqueId(), cp);
 		e.getPlayer().teleport(Main.spawn);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onQuit(PlayerQuitEvent e) {
 		Main.playerCache.remove(e.getPlayer().getUniqueId());
 	}

@@ -9,12 +9,9 @@ import fr.entasia.creativetools.listeners.BasicListener;
 import fr.entasia.creativetools.listeners.PlotListener;
 import fr.entasia.creativetools.listeners.ProtectListener;
 import fr.entasia.creativetools.utils.CreaPlayer;
-import net.minecraft.server.v1_14_R1.BlockPosition;
-import net.minecraft.server.v1_14_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -64,12 +61,11 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	public boolean loadConfig() {
+	public void loadConfig() {
 		main.reloadConfig();
 		world = Bukkit.getServer().getWorlds().get(0);
 		buildworld = Bukkit.getServer().getWorld(getConfig().getString("buildworld", "world"));
 		spawn = new Location(world, parseLoc("x") + 0.5, parseLoc("y") + 0.2, parseLoc("z") + 0.5);
-		return true;
 	}
 
 	private static double parseLoc(String a) {
@@ -81,19 +77,5 @@ public class Main extends JavaPlugin {
 			if(p.getId().getX()==plid.getX()&&p.getId().getY()==plid.getY())return p;
 		}
 		return null;
-	}
-
-	public static void tpSpawn(Player p){
-		p.teleport(spawn);
-		p.getInventory().clear();
-	}
-
-	public static CreaPlayer getCreaPlayer(Player p){
-		CreaPlayer cp = playerCache.get(p.getUniqueId());
-		if(cp==null){
-			cp = new CreaPlayer(p);
-			playerCache.put(p.getUniqueId(), cp);
-		}
-		return cp;
 	}
 }

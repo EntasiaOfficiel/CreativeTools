@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 
 public class CreaPlayer {
 
-    public int random;
     public SBManager sb;
     public Player p;
 
