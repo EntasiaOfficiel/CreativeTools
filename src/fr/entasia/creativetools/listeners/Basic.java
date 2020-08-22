@@ -18,7 +18,6 @@ public class Basic implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		System.out.println("join event for "+e.getPlayer().getName());
 		e.getPlayer().teleport(Main.spawn);
 		CreaPlayer cp = new CreaPlayer(e.getPlayer());
 		cp.sb = new SBManager(cp);
@@ -37,7 +36,6 @@ public class Basic implements Listener {
 
 	@EventHandler
 	public void onPlotEnter(PlayerEnterPlotEvent e) {
-		System.out.println("plot enter event for "+e.getPlayer().getName());
 		CreaPlayer cp = Main.playerCache.get(e.getPlayer().getUniqueId());
 		if(cp!=null){
 			cp.sb.setPlot(e.getPlot());
@@ -46,7 +44,6 @@ public class Basic implements Listener {
 
 	@EventHandler
 	public void onPlotQuit(PlayerLeavePlotEvent e) {
-		System.out.println("plot leave event for "+e.getPlayer().getName());
 		CreaPlayer cp = Main.playerCache.get(e.getPlayer().getUniqueId());
 		if(cp!=null){
 			cp.sb.setPlot(null);
@@ -64,7 +61,6 @@ public class Basic implements Listener {
 				cp.sb.register();
 			}else{
 				cp.sb.clear();
-//				cp.sb.objective.unregister();
 			}
 		}
 	}

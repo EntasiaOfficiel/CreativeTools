@@ -349,7 +349,6 @@ public class InvsManager {
 		@Override
 		public void onMenuClick(MenuClickEvent e) {
 			Plot plot = (Plot)e.data;
-			System.out.println(plot==null);
 			if(plot==null||!plot.isAdded(e.player.getUniqueId()))e.player.sendMessage("§cUne erreur s'est produite !");
 			else {
 				if(e.item.getType() == Material.BOOK_AND_QUILL) plotGestionOpen(e.player, plot);
@@ -362,7 +361,6 @@ public class InvsManager {
 								selected.getTypeId(),
 								selected.getDurability());
 						for(RegionWrapper rw : plot.getRegions()){
-							System.out.println(rw.minX+":"+rw.minZ+" --> "+rw.maxX+":"+rw.maxZ);
 							try {
 								editSession.setBlocks(new CuboidRegion(new Vector(rw.minX, 65, rw.minZ), new Vector(rw.maxX, 65, rw.maxZ)),
 										bb);
