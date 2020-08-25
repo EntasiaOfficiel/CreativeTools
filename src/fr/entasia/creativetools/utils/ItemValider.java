@@ -31,6 +31,7 @@ public class ItemValider {
 	public static boolean validateItem(ItemStack item){
 		try{
 			ItemMeta meta = item.getItemMeta();
+			if(meta==null)return true;
 			Map<String, NBTBase> map = (Map<String, NBTBase>)unhandledTags.get(meta);
 			for(Map.Entry<String, NBTBase> e : map.entrySet()){
 				System.out.println(e.getKey());
@@ -47,7 +48,7 @@ public class ItemValider {
 			ItemNBT.setNBT(item, nbt);
 
 			return true;
-		} catch(ReflectiveOperationException e){
+		} catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}

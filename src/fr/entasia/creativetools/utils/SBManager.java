@@ -66,7 +66,7 @@ public class SBManager {
 				objective.getScore(plots[0]).setScore(47);
 				if(plot.hasOwner()){
 					PlotSquared.get().getImpromptuUUIDPipeline().getNames(plot.getOwners()).thenAcceptAsync(map -> {
-						plots[1] = "§7Owner :§b"+map.get(0).getUsername();
+						plots[1] = "§7Owner : §b"+map.get(0).getUsername();
 						objective.getScore(plots[1]).setScore(46);
 					});
 				} else{
