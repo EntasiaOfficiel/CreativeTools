@@ -1,8 +1,8 @@
 package fr.entasia.creativetools.utils;
 
-import com.intellectualcrafters.plot.object.Plot;
+import com.plotsquared.core.PlotSquared;
+import com.plotsquared.core.plot.Plot;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -64,13 +64,18 @@ public class SBManager {
 			if(plot.hasOwner()){
 				plots[0] = "§7Plot : ";
 				objective.getScore(plots[0]).setScore(47);
-				Player p = Bukkit.getPlayer(plot.getOwners().iterator().next());
-				if(p==null) plots[1] = "§7Owner : §bInconnu";
-				else plots[1] = "§7Owner : §b"+p.getDisplayName();
-				objective.getScore(plots[1]).setScore(46);
+				if(plot.hasOwner()){
+					PlotSquared.get().getImpromptuUUIDPipeline().getNames(plot.getOwners()).thenAcceptAsync(map -> {
+						plots[1] = "§7Owner :§b"+map.get(0).getUsername();
+						objective.getScore(plots[1]).setScore(46);
+					});
+				} else{
+					plots[1] = "§7Owner : §bInconnu";
+					objective.getScore(plots[1]).setScore(46);
+				}
 
 				double av = plot.getAverageRating();
-				plots[2] = "§7Note : §b ";
+				plots[2] = "§7Note : §b";
 				if(Double.isNaN(av))plots[2]+="Non noté";
 				else{
 					double a = Math.round(av*100)/100d;
@@ -80,7 +85,7 @@ public class SBManager {
 				}
 				objective.getScore(plots[2]).setScore(45);
 
-				plots[3] = "§7Role : §b ";
+				plots[3] = "§7Role : §b";
 				if(plot.isOwner(cp.p.getUniqueId()))plots[3]+="§cOwner";
 				else if(plot.getTrusted().contains(cp.p.getUniqueId()))plots[3]+="§aMembre";
 				else if(plot.getTrusted().contains(cp.p.getUniqueId()))plots[3]+="§eCOOP";
