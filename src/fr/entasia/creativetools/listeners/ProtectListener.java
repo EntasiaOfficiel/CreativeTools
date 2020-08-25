@@ -1,11 +1,13 @@
 package fr.entasia.creativetools.listeners;
 
 import fr.entasia.creativetools.Main;
+import fr.entasia.creativetools.utils.ItemValider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 
 public class ProtectListener implements Listener {
 
@@ -28,5 +30,10 @@ public class ProtectListener implements Listener {
 		if(e.getEntity().getWorld()==Main.buildworld){
 			e.setCancelled(true);
 		}
+	}
+
+	@EventHandler
+	public void a(InventoryCreativeEvent e) {
+		ItemValider.validateItem(e.getCursor());
 	}
 }
