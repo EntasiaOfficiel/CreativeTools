@@ -86,7 +86,7 @@ public class SBManager {
 				objective.getScore(plots[2]).setScore(45);
 
 				plots[3] = "§7Role : §b";
-				if(plot.isOwner(cp.p.getUniqueId()))plots[3]+="§cOwner";
+				if(plot.isOwner(cp.p.getUniqueId()))plots[3]+="§cChef";
 				else if(plot.getTrusted().contains(cp.p.getUniqueId()))plots[3]+="§aMembre";
 				else if(plot.getTrusted().contains(cp.p.getUniqueId()))plots[3]+="§eCOOP";
 				else if(plot.isDenied(cp.p.getUniqueId()))plots[3]+="§4Banni";
