@@ -3,9 +3,9 @@ package fr.entasia.creativetools.utils;
 import fr.entasia.apis.nbt.ItemNBT;
 import fr.entasia.apis.nbt.NBTComponent;
 import fr.entasia.apis.utils.ReflectionUtils;
-import net.minecraft.server.v1_14_R1.NBTBase;
-import net.minecraft.server.v1_14_R1.NBTList;
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.server.v1_15_R1.NBTBase;
+import net.minecraft.server.v1_15_R1.NBTList;
+import net.minecraft.server.v1_15_R1.NBTTagCompound;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -57,9 +57,17 @@ public class ItemValider {
 	private static final int MAX_DEPTH = 4;
 
 	private static void recur(NBTTagCompound nbt, int lvl){
-		if(lvl==MAX_DEPTH)nbt.map.clear();
+		Map<String, NBTBase> map;
+		try {
+			map = (Map<String, NBTBase>)NBTComponent.mapField.get(nbt);
+		} catch (ReflectiveOperationException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		if(lvl==MAX_DEPTH)map.clear();
 		else{
-			for(NBTBase l : nbt.map.values()){
+			for(NBTBase l : map.values()){
 				apply(l, lvl+1);
 			}
 		}

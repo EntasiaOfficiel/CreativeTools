@@ -12,7 +12,7 @@
     <orderEntry type="library" name="FAWE" level="project" />
     <orderEntry type="library" name="PlotSquared" level="project" />
     <orderEntry type="library" name="Cosmetics" level="project" />
-    <orderEntry type="library" name="paper-1.14.4" level="project" />
     <orderEntry type="library" name="WorldEdit" level="project" />
+    <orderEntry type="library" name="paper-1.15.2" level="project" />
   </component>
 </module>

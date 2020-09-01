@@ -3,7 +3,6 @@ package fr.entasia.creativetools.utils;
 import com.boydti.fawe.FaweAPI;
 import com.boydti.fawe.util.EditSessionBuilder;
 import com.plotsquared.core.plot.Plot;
-import com.plotsquared.core.plot.PlotId;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3Imp;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -28,10 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class InvsManager {
 
@@ -43,20 +39,19 @@ public class InvsManager {
 	public static MenuCreator plotListMenu = new MenuCreator(null, null) {
 		@Override
 		public void onMenuClick(MenuClickEvent e) {
-			if(e.item.hasItemMeta()&&e.item.getItemMeta().hasDisplayName()) {
-				if (e.item.getLore() != null && e.item.getLore().size() != 0) {
-					String a = e.item.getLore().get(0).substring(7);
-					Plot plot = Main.getPlot(PlotId.fromString(a));
-					if (plot == null || !plot.isAdded(e.player.getUniqueId())) e.player.sendMessage("§cUne erreur s'est produite !");
-					else plotGestionOpen(e.player, plot);
-				}
-			}
+			HashMap<Integer, Plot> link = (HashMap<Integer, Plot>) e.data;
+			if (link == null) return;
+			Plot plot = link.get(e.slot);
+			if (plot == null) e.player.sendMessage("§cUne erreur s'est produite !");
+			else if (plot.isAdded(e.player.getUniqueId())) plotGestionOpen(e.player, plot);
+			else e.player.sendMessage("§cTu n'es plus membre de ce plot !");
 		}
 	};
 
 	public static void plotListOpen(Player p){
 
-		Inventory inv = plotListMenu.createInv(6, "§aPlots :");
+		HashMap<Integer, Plot> link = new HashMap<>();
+		Inventory inv = plotListMenu.createInv(6, "§aPlots :", link);
 
 		ArrayList<Plot> member = new ArrayList<>();
 		ArrayList<Plot> owner = new ArrayList<>();
@@ -69,6 +64,7 @@ public class InvsManager {
 		}
 
 
+
 		int slot = 10;
 		int n=1;
 		ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
@@ -78,6 +74,8 @@ public class InvsManager {
 			meta.setLore(Collections.singletonList("§eID : "+plot.getId().toString()));
 			item.setItemMeta(meta);
 			inv.setItem(slot, item);
+			link.put(slot, plot);
+
 			if(slot%7==0)slot+=3;
 			else slot++;
 			n++;
@@ -95,6 +93,8 @@ public class InvsManager {
 			meta.setLore(Collections.singletonList("§eID : "+plot.getId().toString()));
 			item.setItemMeta(meta);
 			inv.setItem(slot, item);
+			link.put(slot, plot);
+
 			if (slot % 7 == 0) slot += 3;
 			else slot++;
 			n++;
@@ -145,41 +145,25 @@ public class InvsManager {
 
 		Inventory inv = plotGestionMenu.createInv(3, "§aGestion du Plot :", plot);
 
-		ItemStack item = new ItemStack(Material.ENDER_PEARL, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§7Se téléporter à ce plot");
-		item.setItemMeta(meta);
+		ItemStack item = new ItemBuilder(Material.ENDER_PEARL).name("§7Se téléporter à ce plot").build();
 		inv.setItem(10, item);
 
 
-		item = new ItemStack(Material.LIGHT_BLUE_BANNER, 1, (short)3);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§7Voir les membres de la team");
-		item.setItemMeta(meta);
+		item = new ItemBuilder(Material.LIGHT_BLUE_BANNER).name("§7Voir les membres de la team").build();
 		inv.setItem(11, item);
 
-		item = new ItemStack(Material.OAK_SAPLING);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§7Changer de biome");
-		item.setItemMeta(meta);
+		item = new ItemBuilder(Material.OAK_SAPLING).name("§7Changer de biome").build();
 		inv.setItem(12, item);
 
-		item = new ItemStack(Material.SAND);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§7Changer le sol du Plot");
-		ArrayList<String> list = new ArrayList<>();
-		list.add("§4§lEN BETA :");
-		list.add("§cCette opération va totalement remplacer le sol de votre plot ( couche de surface seulement )");
-		list.add("§cy compris les blocks que vous aurez posé vous-même !");
-		list.add("§cA ne donc pas utiliser sur un plot dont la surface est un pixel-art, par exemple");
-		meta.setLore(list);
-		item.setItemMeta(meta);
+		item = new ItemBuilder(Material.SAND).name("§7Changer le sol du Plot").lore(
+			"§4§lEN BETA :",
+			"§cCette opération va totalement remplacer le sol de votre plot ( couche de surface seulement )",
+			"§cy compris les blocks que vous aurez posé vous-même !",
+			"§cA ne donc pas utiliser sur un plot dont la surface est un pixel-art, par exemple"
+		).build();
 		inv.setItem(13, item);
 
-		item = new ItemStack(Material.WRITABLE_BOOK, 1);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§cRetour au menu précédent");
-		item.setItemMeta(meta);
+		item = new ItemBuilder(Material.WRITABLE_BOOK, 1).name("§cRetour au menu précédent").build();
 		inv.setItem(26, item);
 
 		p.openInventory(inv);
@@ -190,90 +174,60 @@ public class InvsManager {
 	// ---------- Plot Team Menu ----------
 	// ####################
 
-	public static MenuCreator plotTeamMenu = new MenuCreator(null, null) {
+	public static MenuCreator plotTeamMenu = new MenuCreator() {
 		@Override
 		public void onMenuClick(MenuClickEvent e) {
-			if (e.item.hasItemMeta() && e.item.getItemMeta().hasDisplayName()) {
-				Plot plot = (Plot) e.data;
-				if (plot == null || !plot.isAdded(e.player.getUniqueId()))
-					e.player.sendMessage("§cUne erreur s'est produite !");
-				else if (e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
+			Plot plot = (Plot) e.data;
+			if (plot == null){
+				e.player.sendMessage("§cUne erreur s'est produite !");
+				return;
+			}
+			if (e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
+			else{
+				if(plot.isAdded(e.player.getUniqueId())){
+					e.player.sendMessage("§cPas encore implémenté !");
+				}else{
+					e.player.sendMessage("§cTu n'es plus membre de cette île !");
+				}
 			}
 		}
 	};
 
 	public static void plotTeamOpen(Player p, Plot plot) {
 
-		Set<UUID> owners = plot.getOwners();
-		Set<UUID> members = plot.getTrusted();
-		Set<UUID> coops = plot.getMembers();
-		Inventory inv = plotTeamMenu.createInv( (owners.size()+members.size()+coops.size())/9+1, "§7Membres de la team", plot);
+		HashMap<String, Set<UUID>> map = new HashMap<>();
+		map.put("§cChef", plot.getOwners());
+		map.put("§aMembre", plot.getTrusted());
+		map.put("§eCOOP", plot.getMembers());
+		Inventory inv = plotTeamMenu.createInv( map.size()/9+1, "§7Membres de la team", plot);
 		ItemStack item = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta meta = (SkullMeta)item.getItemMeta();
 		OfflinePlayer lp;
 		int i = 0;
 		boolean played;
 		ArrayList<String> array = new ArrayList<>();
-		for (UUID uuid : owners) {
-			array.clear();
-			array.add("§6Rang : §cOwner");
-			lp = Bukkit.getOfflinePlayer(uuid);
-			played = lp.hasPlayedBefore();
-			if (played) {
-				meta.setDisplayName("§c" + lp.getName());
-				meta.setOwningPlayer(null);
-			} else{
-				meta.setDisplayName("§3Joueur inconnu !");
-				array.add("§9Ce joueur n'a pas été trouvé dans nos bases de données ! Cela peut être réglé à sa reconnexion");
-			}
+		for(Map.Entry<String, Set<UUID>> e : map.entrySet()){
+			for (UUID uuid : e.getValue()) {
+				array.clear();
+				array.add("§6Rang : "+e.getKey());
+				lp = Bukkit.getOfflinePlayer(uuid);
+				played = lp.hasPlayedBefore();
+				if (played) {
+					meta.setDisplayName("§c" + lp.getName());
+					meta.setOwningPlayer(null);
+				} else{
+					meta.setDisplayName("§3Joueur inconnu !");
+					array.add("§9Ce joueur n'a pas été trouvé dans nos bases de données ! Cela peut être réglé à sa reconnexion");
+				}
 
-			meta.setLore(array);
-			item.setItemMeta(meta);
-			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
-			i++;
+				meta.setLore(array);
+				item.setItemMeta(meta);
+				ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
+				i++;
+			}
 		}
 
-		for (UUID uuid : members) {
-			array.clear();
-			array.add("§6Rang : §aMembre");
-			lp = Bukkit.getOfflinePlayer(uuid);
-			played = lp.hasPlayedBefore();
-			if (played) {
-				meta.setDisplayName("§a" + lp.getName());
-				meta.setOwningPlayer(null);
-			} else{
-				meta.setDisplayName("§3Joueur inconnu !");
-				array.add("§9Ce joueur n'a pas été trouvé dans nos bases de données ! Cela peut être réglé à sa reconnexion");
-			}
-
-			meta.setLore(array);
-			item.setItemMeta(meta);
-			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
-			i++;
-		}
-
-		for (UUID uuid : coops) {
-			array.clear();
-			array.add("§6Rang : §eCOOP");
-			lp = Bukkit.getOfflinePlayer(uuid);
-			played = lp.hasPlayedBefore();
-			if (played) {
-				meta.setDisplayName("§e" + lp.getName());
-				meta.setOwningPlayer(null);
-			} else{
-				meta.setDisplayName("§3Joueur inconnu !");
-				array.add("§9Ce joueur n'a pas été trouvé dans nos bases de données ! Cela peut être réglé à sa reconnexion");
-			}
-
-			meta.setLore(array);
-			item.setItemMeta(meta);
-			ItemUtils.placeSkullAsync(inv, i, item, lp, Main.main);
-			i++;
-		}
-		item = new ItemStack(Material.WRITABLE_BOOK, 1);
-		ItemMeta rmeta = item.getItemMeta();
-		rmeta.setDisplayName("§cRetour au menu précédent");
-		item.setItemMeta(rmeta);
+		item = new ItemBuilder(Material.WRITABLE_BOOK).name("§cRetour au menu précédent").build();
 		inv.setItem(inv.getSize()-1, item);
 		p.openInventory(inv);
 	}
@@ -283,45 +237,45 @@ public class InvsManager {
 	// ---------- Plot Biome Menu ----------
 	// ####################
 
-	public static MenuCreator plotBiomeMenu = new MenuCreator(null, null) {
+	public static MenuCreator plotBiomeMenu = new MenuCreator() {
 		@Override
 		public void onMenuClick(MenuClickEvent e) {
-			if(e.item.hasItemMeta()&&e.item.getItemMeta().hasDisplayName()){
-				Plot plot = (Plot)e.data;
-				if(plot==null||!plot.isAdded(e.player.getUniqueId()))e.player.sendMessage("§cUne erreur s'est produite !");
+			Plot plot = (Plot) e.data;
+			if (plot == null || !plot.isAdded(e.player.getUniqueId()))
+				e.player.sendMessage("§cUne erreur s'est produite !");
+			else {
+				if (e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
 				else {
-					if(e.item.getType() == Material.WRITABLE_BOOK) plotGestionOpen(e.player, plot);
-					else {
-						BiomeType type;
-						switch (e.item.getType()) {
-							case GRASS:
-								type = BiomeTypes.PLAINS;
-								break;
-							case DIRT:
-								type = BiomeTypes.TAIGA;
-								break;
-							case ACACIA_LOG:
-								type = BiomeTypes.SAVANNA;
-								break;
-							case BROWN_MUSHROOM:
-								type = BiomeTypes.SWAMP;
-								break;
-							case VINE:
-								type = BiomeTypes.JUNGLE;
-								break;
-							case ICE:
-								type = BiomeTypes.ICE_SPIKES;
-								break;
-							default:
-								e.player.sendMessage("§cCe biome n'a pas été implémenté dans le Créatif ! Contacte un membre du Staff");
-								return;
-						}
-						e.player.closeInventory();
-						e.player.teleport(Main.spawn);
-						e.player.sendMessage("§6Nous t'avons téléporté au spawn afin d'actualiser le plot, tu peux y retourner dès maintenant !");
-						plot.setBiome(type, null);
+					BiomeType type;
+					switch (e.item.getType()) {
+						case GRASS:
+							type = BiomeTypes.PLAINS;
+							break;
+						case DIRT:
+							type = BiomeTypes.TAIGA;
+							break;
+						case ACACIA_LOG:
+							type = BiomeTypes.SAVANNA;
+							break;
+						case BROWN_MUSHROOM:
+							type = BiomeTypes.SWAMP;
+							break;
+						case VINE:
+							type = BiomeTypes.JUNGLE;
+							break;
+						case ICE:
+							type = BiomeTypes.ICE_SPIKES;
+							break;
+						default:
+							e.player.sendMessage("§cCe biome n'a pas été implémenté dans le Créatif ! Contacte un membre du Staff");
+							return;
 					}
+					e.player.closeInventory();
+					e.player.teleport(Main.spawn);
+					e.player.sendMessage("§6Nous t'avons téléporté au spawn afin d'actualiser le plot, tu peux y retourner dès maintenant !");
+					plot.setBiome(type, null);
 				}
+
 			}
 		}
 	};
