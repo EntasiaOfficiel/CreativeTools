@@ -7,13 +7,9 @@ import fr.entasia.apis.utils.ReflectionUtils;
 import net.minecraft.server.v1_15_R1.NBTBase;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftMetaBanner;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftMetaBlockState;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftMetaBook;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 
